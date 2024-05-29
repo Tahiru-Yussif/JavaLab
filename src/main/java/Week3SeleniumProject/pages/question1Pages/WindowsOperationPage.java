@@ -7,6 +7,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.Set;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class WindowsOperationPage {
     private final WebDriver driver;
     private final By windowsButton = By.linkText("Window Operations");
@@ -16,17 +18,7 @@ public class WindowsOperationPage {
     }
 
     public void clickWindowsButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement windowsOperation = wait.until(ExpectedConditions.visibilityOfElementLocated(windowsButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", windowsOperation);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(windowsOperation));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", windowsOperation);
+        clickElement(driver, windowsButton);
     }
 
     public void clickNewTab() {

@@ -9,6 +9,8 @@
 
     import java.time.Duration;
 
+    import static Week3SeleniumProject.util.AppConfig.clickElement;
+
     public class IframesPage {
         private final WebDriver driver;
         private final By iframesButton = By.linkText("Iframes");
@@ -20,17 +22,7 @@
         }
 
         public void clickIframesButton() {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement buttonIframe = wait.until(ExpectedConditions.visibilityOfElementLocated(iframesButton));
-
-            // Scroll into view
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonIframe);
-
-            // Wait for the element to be clickable
-            wait.until(ExpectedConditions.elementToBeClickable(buttonIframe));
-
-            // Use JavaScript to click the button
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", buttonIframe);
+            clickElement(driver, iframesButton);
         }
 
         private boolean checkIframe(int iframeIndex, By elementLocator) {

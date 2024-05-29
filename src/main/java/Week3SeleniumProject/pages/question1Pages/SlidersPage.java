@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class SlidersPage {
     private final WebDriver driver;
     private final By slideButton = By.linkText("Sliders");
@@ -19,17 +21,7 @@ public class SlidersPage {
     }
 
     public void clickSlidersButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement buttonSliders = wait.until(ExpectedConditions.visibilityOfElementLocated(slideButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonSliders);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(buttonSliders));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", buttonSliders);
+        clickElement(driver, slideButton);
     }
 
     public void performSlider() {

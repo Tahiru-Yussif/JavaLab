@@ -12,9 +12,11 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class FileDownloadPage {
     private final WebDriver driver;
-    private final By tablesButton = By.linkText("File Download");
+    private final By fileDownloadButton = By.linkText("File Download");
     private final By normalFileDownloadBtn = By.cssSelector("a.wpdm-download-link.download-on-click.btn.btn-primary");
     private final By protectedFileDownloadBtn = By.cssSelector("a.wpdm-download-link.wpdm-download-locked.btn.btn-primary");
     private final By enterPasswordValue = By.cssSelector("#password_6655f50f448ce_921");
@@ -24,17 +26,7 @@ public class FileDownloadPage {
     }
 
     public void clickFileDownloadButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement buttonFileDownload = wait.until(ExpectedConditions.visibilityOfElementLocated(tablesButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonFileDownload);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(buttonFileDownload));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", buttonFileDownload);
+        clickElement(driver, fileDownloadButton);
     }
 
     public ChromeOptions performNormalDownload() {

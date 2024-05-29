@@ -10,6 +10,8 @@ import org.testng.Assert;
 
 import java.time.Duration;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class ModalsPage{
     private final WebDriver driver;
     private final By modalsButton = By.linkText("Modals");
@@ -25,17 +27,7 @@ public class ModalsPage{
     }
 
     public void clickModalsButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement buttonModal = wait.until(ExpectedConditions.visibilityOfElementLocated(modalsButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonModal);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(buttonModal));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", buttonModal);
+        clickElement(driver, modalsButton);
     }
 
     public void clickSimpleModalButton() {

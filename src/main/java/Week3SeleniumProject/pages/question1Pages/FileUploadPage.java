@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class FileUploadPage {
 
     private final WebDriver driver;
@@ -22,17 +24,7 @@ public class FileUploadPage {
     }
 
     public void clickFileUploadButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement uploadFile = wait.until(ExpectedConditions.visibilityOfElementLocated(fileUploadButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", uploadFile);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(uploadFile));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", uploadFile);
+        clickElement(driver, fileUploadButton);
     }
 
     public void uploadedFile(String filePath) {

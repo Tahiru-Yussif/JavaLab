@@ -1,8 +1,16 @@
 package Week3SeleniumProject.util;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Properties;
 
 public class AppConfig {
@@ -57,9 +65,11 @@ public class AppConfig {
     public static String getTablesURL() {
         return properties.getProperty("tablesURL");
     }
+
     public static String getFileDownloadURL() {
         return properties.getProperty("fileDownloadURL");
     }
+
     public static String getName() {
         return properties.getProperty("name");
     }
@@ -74,5 +84,21 @@ public class AppConfig {
 
     public static String getFileUploadPath() {
         return properties.getProperty("fileUploadPath");
+    }
+
+    // for scroll in the webpage
+
+    public static void clickElement(WebDriver driver, By locator) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+
+        // Scroll into view
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+
+        // Wait for the element to be clickable
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+
+        // Use JavaScript to click the button
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 }

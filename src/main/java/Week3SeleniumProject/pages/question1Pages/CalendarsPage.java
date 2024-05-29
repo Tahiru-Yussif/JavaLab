@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class CalendarsPage {
     private final WebDriver driver;
     private final By calendarsButton = By.linkText("Calendars");
@@ -25,17 +27,7 @@ public class CalendarsPage {
     }
 
     public void clickCalendarsButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement buttonCalendar = wait.until(ExpectedConditions.visibilityOfElementLocated(calendarsButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonCalendar);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(buttonCalendar));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", buttonCalendar);
+        clickElement(driver, calendarsButton);
     }
 
     public void clickToOpenDatePicker() {

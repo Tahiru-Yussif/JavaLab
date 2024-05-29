@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class FormFieldPage {
     private final WebDriver driver;
     private final By formFieldsButton = By.linkText("Form Fields");
@@ -25,17 +27,7 @@ public class FormFieldPage {
     }
 
     public void clickFormFieldButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement formFieldButton = wait.until(ExpectedConditions.visibilityOfElementLocated(formFieldsButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", formFieldButton);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(formFieldButton));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", formFieldButton);
+        clickElement(driver, formFieldsButton);
     }
 
     public void enterName(String name) {

@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static Week3SeleniumProject.util.AppConfig.clickElement;
+
 public class TablesPage {
     private final WebDriver driver;
     private final By tablesButton = By.linkText("Tables");
@@ -20,17 +22,7 @@ public class TablesPage {
     }
 
     public void clickTablesButton() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement buttonTables = wait.until(ExpectedConditions.visibilityOfElementLocated(tablesButton));
-
-        // Scroll into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonTables);
-
-        // Wait for the element to be clickable
-        wait.until(ExpectedConditions.elementToBeClickable(buttonTables));
-
-        // Use JavaScript to click the button
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", buttonTables);
+        clickElement(driver, tablesButton);
     }
 
     public boolean verifySearchedItem(String item, int tableIndex) {
