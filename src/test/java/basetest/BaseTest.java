@@ -3,10 +3,16 @@ package basetest;
 
 import Week3SeleniumProject.util.AppConfig;
 import Week3SeleniumProject.util.WebdriverSetUp;
+import com.aventstack.extentreports.ExtentReporter;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 
 public class BaseTest {
 
@@ -26,8 +32,12 @@ public class BaseTest {
     public String name;
     public String email;
     public String message;
+    protected ExtentReports extent;
+    ExtentHtmlReporter htmlReporter;
+    protected ExtentTest test;
 
-    @BeforeClass
+//    @BeforeClass
+    @BeforeSuite
     public void setUp() {
         driver = WebdriverSetUp.setUp();
         driver.manage().window().maximize();
@@ -47,10 +57,15 @@ public class BaseTest {
         name = AppConfig.getName();
         email = AppConfig.getEmail();
         message = AppConfig.getMessage();
+        this.htmlReporter = new ExtentHtmlReporter("ExternalTestReport.html");
+        this.extent = new ExtentReports();
+        this.extent.attachReporter(new ExtentReporter[]{this.htmlReporter});
     }
 
-    @AfterClass
+//    @AfterClass
+    @AfterSuite
     public void tearDown() {
         WebdriverSetUp.endTest();
+        this.extent.flush();
     }
 }

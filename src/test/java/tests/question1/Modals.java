@@ -50,6 +50,5 @@ public class Modals extends BaseTest {
         // Verify modal Container is displayed
         WebElement modalContainer = modalPage.confirmModalContainer();
         Assert.assertTrue(modalContainer.isDisplayed(), "Modal is not displayed");
-
     }
 }
