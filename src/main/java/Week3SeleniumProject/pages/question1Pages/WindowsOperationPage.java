@@ -1,60 +1,58 @@
 package Week3SeleniumProject.pages.question1Pages;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 
-import java.time.Duration;
 import java.util.Set;
 
-import static Week3SeleniumProject.util.AppConfig.clickElement;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.switchTo;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+
 
 public class WindowsOperationPage {
-    private final WebDriver driver;
-    private final By windowsButton = By.linkText("Window Operations");
-
-    public WindowsOperationPage(WebDriver driver) {
-        this.driver = driver;
-    }
+    private final SelenideElement windowsButton = $(By.linkText("Window Operations"));
+    private final SelenideElement newTabButton = $(By.cssSelector("button.custom_btn.btn_hover:first-of-type"));
+    private final SelenideElement replaceTabButton = $(By.xpath("(//button[contains(@class, 'custom_btn') and contains(@class, 'btn_hover')])[2]"));
 
     public void clickWindowsButton() {
-        clickElement(driver, windowsButton);
+        windowsButton.click();
     }
 
     public void clickNewTab() {
-        WebElement newTabButton = driver.findElement(By.cssSelector("button.custom_btn.btn_hover:first-of-type"));
         newTabButton.click();
 
         // Get the current window handle
-        String originalWindow = driver.getWindowHandle();
-//        driver.getWindowHandles().forEach(tab -> driver.switchTo().window(tab));
+        String originalWindow = getWebDriver().getWindowHandle();
 
-        // Switch to the new tab
-        Set<String> windowHandles = driver.getWindowHandles();
+        // Wait until a new tab is opened and switch to it
+        Set<String> windowHandles = getWebDriver().getWindowHandles();
         for (String handle : windowHandles) {
             if (!handle.equals(originalWindow)) {
-                driver.switchTo().window(handle);
+                switchTo().window(handle);
                 break;
             }
         }
     }
 
     public void clickReplaceWindow() {
-        WebElement replaceTabButton = driver.findElement(By.cssSelector("button.custom_btn.btn_hover:nth-of-type(1)"));
         replaceTabButton.click();
-        // Get the current window handle
-        String originalWindow = driver.getWindowHandle();
 
-        // Switch to the new tab
-        Set<String> windowHandles = driver.getWindowHandles();
+        // Get the current window handle
+        String originalWindow = getWebDriver().getWindowHandle();
+
+        // Wait until a new window is opened and switch to it
+        Set<String> windowHandles = getWebDriver().getWindowHandles();
         for (String handle : windowHandles) {
             if (!handle.equals(originalWindow)) {
-                driver.switchTo().window(handle);
+                switchTo().window(handle);
                 break;
             }
         }
-        driver.get("https://automatenow.io/");
-        System.out.println(driver.getCurrentUrl());
+
+        // Navigate to the new URL in the new window
+//        open("https://automatenow.io/");
+        System.out.println(getWebDriver().getCurrentUrl());
     }
 
 }

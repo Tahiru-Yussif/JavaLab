@@ -1,88 +1,77 @@
 package Week3SeleniumProject.pages.question1Pages;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
-import java.util.List;
-
-import static Week3SeleniumProject.util.AppConfig.clickElement;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.testng.Assert;
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byId;
+import static com.codeborne.selenide.Selectors.byName;
+import static com.codeborne.selenide.Selenide.*;
 
 public class FormFieldPage {
-    private final WebDriver driver;
-    private final By formFieldsButton = By.linkText("Form Fields");
-    private final By enterName = By.name("name");
-    private final By checkbox = By.name("fav_drink");
-    private final By radioButtons = By.id("color1");
-    private final By dropDown = By.id("siblings");
+    //    private final WebDriver driver;
+    private final SelenideElement formFieldsButton = $(By.linkText("Form Fields"));
+    private final SelenideElement enterName = $(byName("name"));
+    private final ElementsCollection checkboxes = $$(byName("fav_drink"));
+    private final SelenideElement radioButton = $(byId("color1"));
+    private final SelenideElement dropDown = $(byId("siblings"));
+    private final SelenideElement enterEmail = $(byId("email"));
+    private final SelenideElement enterMessage = $(byId("message"));
+    private final SelenideElement submitButton = $(byId("submit-btn"));
 
-    private final By enterEmail = By.id("email");
-    private final By enterMessage = By.id("message");
-    private final By submitButton = By.id("submit-btn");
-
-    public FormFieldPage(WebDriver driver) {
-        this.driver = driver;
-    }
 
     public void clickFormFieldButton() {
-        clickElement(driver, formFieldsButton);
+        formFieldsButton.click();
     }
 
     public void enterName(String name) {
-        WebElement NameInput = driver.findElement(enterName);
-        NameInput.sendKeys(name);
+        enterName.val(name).shouldHave(value(name));
     }
 
     public void clickCheckbox() {
-        List<WebElement> checkboxes = driver.findElements(checkbox);
-        for (WebElement checkbox :  checkboxes) {
-            if (!checkbox.isSelected()) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkbox);
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkbox);
-            }
-            assert checkbox.isSelected();
+        for (SelenideElement checkbox : checkboxes) {
+            checkbox.shouldNotBe(checked).click();
+            checkbox.shouldBe(checked);
         }
     }
 
     public void clickRadioButton() {
-        WebElement radioButton = driver.findElement(radioButtons);
-            if (!radioButton.isSelected()) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", radioButton);
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", radioButton);
-            }
-            assert radioButton.isSelected();
+        if (!radioButton.isSelected()) {
+            radioButton.click();
+        }
+        radioButton.shouldBe(selected);
     }
 
     public void selectOption() throws InterruptedException {
-        WebElement dropdown = driver.findElement(dropDown);
-        Select opt1 = new Select(dropdown);
-        opt1.selectByIndex(1);
+        // selecting by Index
+        dropDown.selectOption(1);
         Thread.sleep(1000);
-        opt1.selectByValue("no");
-        Thread.sleep(1000);
-        opt1.selectByVisibleText("Maybe");
+        // selecting by name
+        dropDown.selectOption("Yes");
+        dropDown.getSelectedOption().shouldHave(text("Yes"));
+        // selecting by value name
+        dropDown.selectOptionByValue("no");
+        dropDown.getSelectedOption().shouldHave(value("no"));
     }
 
     public void enterEmail(String email) {
-        WebElement EmailInput = driver.findElement(enterEmail);
-        EmailInput.sendKeys(email);
+        enterEmail.val(email).shouldHave(value(email));
     }
 
     public void enterMessage(String message) {
-        WebElement MessageInput = driver.findElement(enterMessage);
-        MessageInput.sendKeys(message);
+        enterMessage.val(message).shouldHave(value(message));
     }
 
     public void clickSubmitButton() {
-        WebElement buttonSubmit = driver.findElement(submitButton);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonSubmit);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", buttonSubmit);
-        // Switch to the alert and get the text
-        Alert alert1 = driver.switchTo().alert();
-        // Close the alert
-        alert1.accept(); /// Pressing okay to confirm
+        submitButton.click();
+//    // Switch to the alert and get the text
+        Alert alert = switchTo().alert();
+        String confirmText = alert.getText();
+        Assert.assertEquals(confirmText, "Message received!");
+        System.out.println(alert.getText());
+        alert.accept(); /// Pressing okay to confirm
     }
 
 

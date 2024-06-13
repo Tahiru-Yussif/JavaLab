@@ -1,32 +1,21 @@
 package Week3SeleniumProject.pages.question1Pages;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
-
-import static Week3SeleniumProject.util.AppConfig.clickElement;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.actions;
 
 public class SlidersPage {
-    private final WebDriver driver;
-    private final By slideButton = By.linkText("Sliders");
-
-    public SlidersPage(WebDriver driver) {
-        this.driver = driver;
-    }
+    private final SelenideElement slideButton = $(By.linkText("Sliders"));
+    private final SelenideElement slider = $(By.id("slideMe"));
+    private final SelenideElement sliderValue = $(By.cssSelector("span#value"));
 
     public void clickSlidersButton() {
-        clickElement(driver, slideButton);
+        slideButton.click();
     }
 
     public void performSlider() {
-        WebElement slider = driver.findElement(By.id("slideMe"));
-
         // Get the width of the slider
         int sliderWidth = slider.getSize().width;
 
@@ -41,16 +30,12 @@ public class SlidersPage {
         // Calculate the offset
         int offset = (int) ((sliderWidth * (targetValue - currentValue)) / (sliderMax - sliderMin));
 
-        // Create an Actions object
-        Actions actions = new Actions(driver);
-
         // Perform the action: click, hold, move by offset, and release
+        Actions actions = actions();
         actions.clickAndHold(slider).moveByOffset(offset, 0).release().perform();
+    }
 
-}
-
-public String confirmSlideValue () {
-        WebElement slideValue = driver.findElement(By.cssSelector("span#value"));
-        return slideValue.getText();
-}
+    public String confirmSlideValue() {
+        return sliderValue.text();
+    }
 }

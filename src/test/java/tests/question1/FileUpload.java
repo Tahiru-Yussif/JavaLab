@@ -7,6 +7,9 @@ import com.aventstack.extentreports.Status;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.sleep;
+
 public class FileUpload extends BaseTest {
 
     @Test
@@ -17,11 +20,11 @@ public class FileUpload extends BaseTest {
         try {
             // Visit the webpage
             test.log(Status.INFO, "Navigating to base URL");
-            driver.get(baseURL);
+            open(baseURL);
             test.log(Status.PASS, "Webpage visited successfully");
 
             // Instantiate the file upload page
-            FileUploadPage fileUpload = new FileUploadPage(driver);
+            FileUploadPage fileUpload = new FileUploadPage();
 
             // Perform file upload
             test.log(Status.INFO, "Clicking file upload button");
@@ -30,8 +33,12 @@ public class FileUpload extends BaseTest {
             test.log(Status.INFO, "Uploading file");
             fileUpload.uploadedFile(filePath);
 
+            sleep(2000);
+
             test.log(Status.INFO, "Clicking file upload submit button");
             fileUpload.clickFileUpload();
+
+            sleep(2000);
 
             // Verify successful file upload
             boolean isSuccessMessageDisplayed = fileUpload.confirmSuccessMessage();
@@ -40,7 +47,7 @@ public class FileUpload extends BaseTest {
 
             // Verify URL
             test.log(Status.INFO, "Verifying URL");
-            URLVerification.verifyURL(driver, fileUploadURL);
+            URLVerification.verifyURL(fileUploadURL);
             test.log(Status.PASS, "URL verified successfully");
 
         } catch (AssertionError e) {

@@ -4,69 +4,69 @@ import Week3SeleniumProject.pages.question1Pages.WindowsOperationPage;
 import Week3SeleniumProject.util.URLVerification;
 import basetest.BaseTest;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.url;
 
 public class WindowOperations extends BaseTest {
 
-    @Test
-    public void testClickWindowsOperation() {
-        // visit the webpage
-        driver.get(baseURL);
+    private WindowsOperationPage windowsOperation;
 
-        // instantiate the WindowsOperations
-        WindowsOperationPage windowsOperation = new WindowsOperationPage(driver);
+    @BeforeMethod
+    @Override
+    public void setUp() {
+        super.setUp();
+        // Visit the webpage
+        open(baseURL);
 
-        // Perform the windows operations
+        // Instantiate the windows page
+        windowsOperation = new WindowsOperationPage();
+
+        // Click on the windows button
         windowsOperation.clickWindowsButton();
-
-        // Verify URL
-        URLVerification.verifyURL(driver, windowOperationsURL);
     }
 
-  @Test
-    public void testNewTab() {
-        testClickWindowsOperation();
+    @Test
+    public void verifyUrl() {
+        // Verify URL
+        URLVerification.verifyURL(windowOperationsURL);
+    }
 
-        // instantiate the WindowsOperations
-        WindowsOperationPage windowsOperation = new WindowsOperationPage(driver);
+    @Test
+    public void testNewTab() {
 
         // Perform the new tab opeations
         windowsOperation.clickNewTab();
 
         // Verify the Title
-      String currentTitle = driver.getTitle();
-      System.out.println(currentTitle);
-      String expectedTitle = "Home | automateNow";
-      // Verify URL
+        String currentTitle = title();
+        System.out.println(currentTitle);
+        String expectedTitle = "Home | automateNow";
+        // Verify URL
         Assert.assertEquals(currentTitle, expectedTitle, "Wrong Title");
     }
 
-//    @Test
+    @Test
     public void testReplaceWindow() throws InterruptedException {
-        testClickWindowsOperation();
-//
-//        // instantiate the WindowsOperations
-        WindowsOperationPage windowsOperation = new WindowsOperationPage(driver);
 
-//        // Perform Replace Window
+       // Perform Replace Window
         windowsOperation.clickReplaceWindow();
-//
-        Thread.sleep(10000);
+
+        String currentURL = url();
+        System.out.println(currentURL);
+        String expectedURL = "https://automatenow.io/";
 
         // Verify URL
-
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        wait.until(ExpectedConditions.urlToBe("https://automatenow.io/"));
-//
-//        String currentURL = driver.getCurrentUrl();
-//        System.out.println(currentURL);
-////        String expectedURL = "https://automatenow.io/";
-//
-//        // Verify URL
-//        Assert.assertEquals(currentURL, expectedURL, "Wrong url");
-//
-//        Thread.sleep(10000);
-
+        Assert.assertEquals(currentURL, expectedURL, "Wrong url");
     }
 
+    @AfterMethod
+    @Override
+    public void tearDown() {
+        super.tearDown();
+        closeWebDriver();
+    }
 }

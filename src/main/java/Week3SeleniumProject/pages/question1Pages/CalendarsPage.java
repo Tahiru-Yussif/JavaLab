@@ -1,68 +1,58 @@
 package Week3SeleniumProject.pages.question1Pages;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import static Week3SeleniumProject.util.AppConfig.clickElement;
+import static com.codeborne.selenide.Selectors.*;
+import static com.codeborne.selenide.Selenide.$;
 
 public class CalendarsPage {
-    private final WebDriver driver;
-    private final By calendarsButton = By.linkText("Calendars");
-    private final By selectDate = By.id("g1065-selectorenteradate");
-    private final By getDateTitle = By.cssSelector(".ui-datepicker-title");
-    private final By submitButton = By.cssSelector(".pushbutton-wide");
-    private final By next = By.cssSelector(".ui-datepicker-next ui-corner-all");
-    private final By successMessage = By.id("contact-form-success-header");
-    private final By verifyDate = By.cssSelector(".field-value");
-    private final String dateSelect = "//a[text()='15']";
-
-    public CalendarsPage(WebDriver driver) {
-        this.driver = driver;
-    }
+    private final SelenideElement calendarsButton = $(By.linkText("Calendars"));
+    private final SelenideElement selectDate = $(byId("g1065-selectorenteradate"));
+    private final SelenideElement getDateTitle = $(byCssSelector(".ui-datepicker-title"));
+    private final SelenideElement submitButton = $(byCssSelector(".pushbutton-wide"));
+    private final SelenideElement next = $(byCssSelector(".ui-datepicker-next.ui-corner-all"));
+    private final SelenideElement successMessage = $(byId("contact-form-success-header"));
+    private final SelenideElement verifyDate = $(byCssSelector(".field-value"));
 
     public void clickCalendarsButton() {
-        clickElement(driver, calendarsButton);
+        calendarsButton.click();
     }
 
     public void clickToOpenDatePicker() {
-        WebElement dateSelect = driver.findElement(selectDate);
-        dateSelect.click();
+        selectDate.click();
     }
 
-    public void selectYear(String Year) {
-        while (!driver.findElement(getDateTitle).getText().contains(Year)) {
-            driver.findElement(next).click();
+    public void selectYearAndMonth(LocalDate targetDate) {
+        DateTimeFormatter yearMonthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+        String targetYearMonth = targetDate.format(yearMonthFormatter);
+
+        while (!getDateTitle.getText().contains(targetYearMonth)) {
+            next.click();
         }
     }
 
-    public void selectDate(String day) {
-        By dateLocator = By.xpath(dateSelect);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement dateElement = wait.until(ExpectedConditions.elementToBeClickable(dateLocator));
-        dateElement.click();
+    public void selectDate(LocalDate targetDate) {
+        selectYearAndMonth(targetDate);
+        $(byXpath("//a[text()='" + targetDate.getDayOfMonth() + "']")).click();
     }
 
     public String getSelectedDate() {
-        return driver.findElement(selectDate).getAttribute("value");
+        return selectDate.getValue();
     }
 
     public void clickSubmitButton() {
-        WebElement submit = driver.findElement(submitButton);
-        submit.click();
+        submitButton.click();
     }
 
     public String getSuccessMessage() {
-        return driver.findElement(successMessage).getText();
+        return successMessage.text();
     }
 
     public String verifiedDate() {
-        return driver.findElement(verifyDate).getText();
+        return verifyDate.text();
     }
 }
-

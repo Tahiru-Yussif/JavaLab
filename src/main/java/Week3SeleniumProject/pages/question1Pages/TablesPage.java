@@ -1,38 +1,34 @@
 package Week3SeleniumProject.pages.question1Pages;
 
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
-import static Week3SeleniumProject.util.AppConfig.clickElement;
+import static com.codeborne.selenide.Condition.enabled;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 public class TablesPage {
-    private final WebDriver driver;
-    private final By tablesButton = By.linkText("Tables");
-    private final By buttonNext = By.id("tablepress-1_next");
-    private final By searchInputButton = By.cssSelector("input[type='search']:first-of-type");
-
-    public TablesPage(WebDriver driver) {
-        this.driver = driver;
-    }
+    private final SelenideElement tablesButton = $(By.linkText("Tables"));
+    private final SelenideElement buttonNext = $(byId("tablepress-1_next"));
+    private final SelenideElement searchInputButton = $(By.cssSelector("input[type='search']:nth-of-type(1)"));
 
     public void clickTablesButton() {
-        clickElement(driver, tablesButton);
+        tablesButton.click();
     }
 
     public boolean verifySearchedItem(String item, int tableIndex) {
         // Locate the table element
-        WebElement table = driver.findElement(By.xpath("(//table)[" + tableIndex + "]"));
+        SelenideElement table = $$(byXpath("(//table)[" + tableIndex + "]")).first();
 
         // Search for the item within the table rows
-        for (WebElement row : table.findElements(By.tagName("tr"))) {
+        ElementsCollection rows = table.$$(byTagName("tr"));
+        for (SelenideElement row : rows) {
             // Check each cell in the row for the item
-            for (WebElement cell : row.findElements(By.tagName("td"))) {
+            ElementsCollection cells = row.$$(byTagName("td"));
+            for (SelenideElement cell : cells) {
                 if (cell.getText().equals(item)) {
                     // Item found
                     return true;
@@ -43,15 +39,12 @@ public class TablesPage {
         return false;
     }
 
-    public void searchItemInTable() {
-        WebElement searchInput = driver.findElement(searchInputButton);
-        searchInput.sendKeys("Nigeria");
+    public void searchItemInTable(String query) {
+        searchInputButton.shouldBe(visible).shouldBe(enabled).val(query).pressEnter();
     }
 
-    public void nextButton() {
-        WebElement nextBtn = driver.findElement(buttonNext);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nextBtn);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", nextBtn);
+    public void clickNextButton() {
+        buttonNext.click();
     }
 }
 

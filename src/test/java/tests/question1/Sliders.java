@@ -7,6 +7,8 @@ import com.aventstack.extentreports.Status;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.codeborne.selenide.Selenide.open;
+
 public class Sliders extends BaseTest {
 
     @Test
@@ -16,11 +18,11 @@ public class Sliders extends BaseTest {
 
         // visit the webpage
         this.test.log(Status.INFO, "Navigating to Google website");
-        driver.get(baseURL);
+        open(baseURL);
         this.test.log(Status.PASS, "Webpage visited successfully");
 
         // Instantiate the sliders page
-        SlidersPage sliders = new SlidersPage(driver);
+        SlidersPage sliders = new SlidersPage();
 
         // Perform sliders
         sliders.clickSlidersButton();
@@ -32,7 +34,7 @@ public class Sliders extends BaseTest {
         this.test.log(Status.PASS, "The slider value verified successfully");
 
         // Verify URL
-        URLVerification.verifyURL(driver, slidersURL);
+        URLVerification.verifyURL(slidersURL);
         this.test.log(Status.PASS, "URL verified successfully");
     }
 }

@@ -1,72 +1,56 @@
 package Week3SeleniumProject.pages.question1Pages;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.testng.Assert;
-
-import java.time.Duration;
-
-import static Week3SeleniumProject.util.AppConfig.clickElement;
+import static com.codeborne.selenide.Selectors.byId;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.switchTo;
 
 public class PopupsPage {
-    private final WebDriver driver;
-    private final By popupsButton = By.linkText("Popups");
-    private final By alert = By.id("alert");
-    private final By confirm = By.id("confirm");
-    private final By prompt = By.id("prompt");
-
-
-    public PopupsPage(WebDriver driver) {
-        this.driver = driver;
-    }
+    private final SelenideElement popupsButton = $(By.linkText("Popups"));
+    private final SelenideElement alert = $(byId("alert"));
+    private final SelenideElement confirm = $(byId("confirm"));
+    private final SelenideElement confirmResponse = $(byId("confirmResult"));
+    private final SelenideElement prompt = $(byId("prompt"));
+    private final SelenideElement promptResult = $(byId("promptResult"));
 
     public void clickPopupsButton() {
-        clickElement(driver, popupsButton);
+        popupsButton.click();
     }
 
     public void clickAlertPopup() {
         // Find and click on the alert button
-        WebElement alertButton = driver.findElement(alert);
-        alertButton.click();
+        alert.click();
         // Switch to the alert and get the text
-        Alert alert = driver.switchTo().alert();
+        Alert alert = switchTo().alert();
         // Close the alert
         alert.accept(); /// Pressing okay to confirm
-
     }
 
     public void clickConfirmPopup() {
         // Find and click on the alert button
-        WebElement confirmButton = driver.findElement(confirm);
-        confirmButton.click();
+        confirm.click();
         // Switch to the alert and get the text
-        Alert alert = driver.switchTo().alert();
+        Alert alert = switchTo().alert();
 
         /// Pressing okay to confirm
-//        alert.accept();
-//        WebElement confirmResult = driver.findElement(By.id("confirmResult"));
-//        String confirmExpectedText = "OK it is!";
-//        String confirmActualText = confirmResult.getText();
-//        Assert.assertTrue(confirmResult.isDisplayed(), "The element with id 'confirmResult' is not displayed");
-//        Assert.assertEquals(confirmActualText, confirmExpectedText, "The text in the element is not as expected");
-
-        /// Pressing cancel to cancel
-        alert.dismiss();
-        WebElement cancelResult = driver.findElement(By.id("confirmResult"));
-        String cancelExpectedText = "Cancel it is!";
-        String cancelActualText = cancelResult.getText();
-        Assert.assertTrue(cancelResult.isDisplayed(), "The element with id 'confirmResult' is not displayed");
-        Assert.assertEquals(cancelActualText, cancelExpectedText, "The text in the element is not as expected");
+        alert.accept();
+        SelenideElement confirmResult = confirmResponse;
+        String confirmExpectedText = "OK it is!";
+        String confirmActualText = confirmResult.getText();
+        confirmResult.shouldBe(Condition.visible);
+        Assert.assertEquals(confirmActualText, confirmExpectedText);
     }
 
-    public void clickPromptPopup() throws InterruptedException {
-        WebElement promptButton = driver.findElement(prompt);
-        promptButton.click();
+    public void clickPromptPopup() {
+        prompt.click();
         // Switch to the alert and get the text
-        Alert alert = driver.switchTo().alert();
+        Alert alert = switchTo().alert();
         alert.sendKeys("Welcome to Prompt Alert");
-        Thread.sleep(2000);
         alert.accept();
+        promptResult.shouldBe(Condition.visible);
     }
 }

@@ -5,15 +5,17 @@ import Week3SeleniumProject.util.URLVerification;
 import basetest.BaseTest;
 import org.testng.annotations.Test;
 
+import static com.codeborne.selenide.Selenide.open;
+
 public class Popups extends BaseTest {
 
     @Test
     public void testPopups() throws InterruptedException {
         // visit the webpage
-        driver.get(baseURL);
+        open(baseURL);
 
         // Initialize the Popups page
-        PopupsPage popups = new PopupsPage(driver);
+        PopupsPage popups = new PopupsPage();
 
         // clicking the popups button
         popups.clickPopupsButton();
@@ -28,6 +30,6 @@ public class Popups extends BaseTest {
         popups.clickPromptPopup();
 
         // Verify URL
-        URLVerification.verifyURL(driver, popupsURL);
+        URLVerification.verifyURL(popupsURL);
     }
 }

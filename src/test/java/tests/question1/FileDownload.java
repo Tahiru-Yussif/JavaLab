@@ -3,71 +3,52 @@ package tests.question1;
 import Week3SeleniumProject.pages.question1Pages.FileDownloadPage;
 import Week3SeleniumProject.util.URLVerification;
 import basetest.BaseTest;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.open;
+
 public class FileDownload extends BaseTest {
+    private FileDownloadPage fileDownload;
 
+    @BeforeMethod
+    @Override
+    public void setUp() {
+        super.setUp();
+        // Visit the webpage
+        open(baseURL);
 
-    @Test
-    public void testClickFileDownloadButton() {
-        // visit the webpage
-        driver.get(baseURL);
+        // Instantiate the file download page
+        fileDownload = new FileDownloadPage();
 
-        // Initialize the File Download page
-        FileDownloadPage fileDownload = new FileDownloadPage(driver);
-
-        // clicking the file download page
+        // Clicking the file download button
         fileDownload.clickFileDownloadButton();
-
-        // Verify URL
-        URLVerification.verifyURL(driver, fileDownloadURL);
     }
 
+        @Test
+    public void testClickFileDownloadButton() {
+        // Verify URL
+        URLVerification.verifyURL(fileDownloadURL);
+    }
 
     @Test
     public void testNormalFileDownload() {
-        // Initialize the File Download page
-        FileDownloadPage fileDownload = new FileDownloadPage(driver);
-//
-        // Set up Chrome options to handle file downloads
-        ChromeOptions options = fileDownload.performNormalDownload();
-
-        // Initialize WebDriver with the specified options
-        driver = new ChromeDriver(options);
-
-        // calling the testClickFileDownloadButton method
-        testClickFileDownloadButton();
-
         // Locate and click the download link
         fileDownload.clickNormalFileDownloadButton();
-
-        // Quit the WebDriver after tests are done
-//        driver.quit();
     }
 
-
-    @Test
+        @Test
     public void testProtectedFileDownload() throws InterruptedException {
-        // Initialize the File Download page
-        FileDownloadPage fileDownload = new FileDownloadPage(driver);
-//
-        // Set up Chrome options to handle file downloads
-        ChromeOptions options = fileDownload.performNormalDownload();
-
-        // Initialize WebDriver with the specified options
-        driver = new ChromeDriver(options);
-
-        // calling the testClickFileDownloadButton method
-        testClickFileDownloadButton();
-
-
         // Perform File Download for protected file
-        fileDownload.clickProtectedFileDownloadButton();
+        fileDownload.downloadLockedFile();
+    }
 
-        Thread.sleep(10000);
-        // enter password and submit
-        fileDownload.enterPasswordAndSubmit();
+    @AfterMethod
+    @Override
+    public void tearDown() {
+        super.tearDown();
+        closeWebDriver();
     }
 }

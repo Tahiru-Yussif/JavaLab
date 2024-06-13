@@ -1,62 +1,50 @@
 package Week3SeleniumProject.pages.question1Pages;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-
-import static Week3SeleniumProject.util.AppConfig.clickElement;
+import java.io.File;
+import static com.codeborne.selenide.Selectors.byCssSelector;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.switchTo;
+import static org.testng.Assert.assertTrue;
 
 public class FileDownloadPage {
-    private final WebDriver driver;
-    private final By fileDownloadButton = By.linkText("File Download");
-    private final By normalFileDownloadBtn = By.cssSelector("a.wpdm-download-link.download-on-click.btn.btn-primary");
-    private final By protectedFileDownloadBtn = By.cssSelector("a.wpdm-download-link.wpdm-download-locked.btn.btn-primary");
-    private final By enterPasswordValue = By.cssSelector("#password_6655f50f448ce_921");
-
-    public FileDownloadPage(WebDriver driver) {
-        this.driver = driver;
-    }
+    private final SelenideElement fileDownloadButton = $(By.linkText("File Download"));
+    private final SelenideElement normalFileDownloadBtn = $(byCssSelector("a.wpdm-download-link.download-on-click.btn.btn-primary"));
+    private final SelenideElement protectedFileDownloadBtn = $(byCssSelector("a.wpdm-download-link.wpdm-download-locked.btn.btn-primary"));
+    private final SelenideElement enterPasswordValue = $(byCssSelector("#password_6655f50f448ce_921"));
+    private final SelenideElement setPassword = $(By.name("password"));
+    private final SelenideElement submitButton = $(".wpdm_submit");
 
     public void clickFileDownloadButton() {
-        clickElement(driver, fileDownloadButton);
+        fileDownloadButton.click();
     }
 
-    public ChromeOptions performNormalDownload() {
-        String downloadFilePath = "/path/to/download/directory";
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("download.default_directory", downloadFilePath);
-        prefs.put("download.prompt_for_download", false);
-        prefs.put("download.directory_upgrade", true);
-        prefs.put("safebrowsing.enabled", true);
-        ChromeOptions options = new ChromeOptions();
-        options.setExperimentalOption("prefs", prefs);
-        return options;
-
+    public void clickNormalFileDownloadButton() {
+        normalFileDownloadBtn.click();
+        File downloadedFile = normalFileDownloadBtn.download();
+        // Verify the file is downloaded
+        assertTrue(downloadedFile.exists(), "File should exist after download");
+        assertTrue(downloadedFile.length() > 0, "Downloaded file should not be empty");
     }
 
-    public void clickNormalFileDownloadButton () {
-        WebElement downloadLink = driver.findElement(normalFileDownloadBtn);
-        downloadLink.click();
-    }
+    public void downloadLockedFile() {
+        String password = "automateNow";
+        protectedFileDownloadBtn.click();
+        switchTo().frame("wpdm-lock-frame");
+        setPassword.setValue(password);
+        submitButton.click();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-    public void clickProtectedFileDownloadButton () {
-        WebElement downloadLink = driver.findElement(protectedFileDownloadBtn);
-//        downloadLink.click();
-//        driver.switchTo().frame(4);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", downloadLink);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", downloadLink);
     }
 
     public void enterPasswordAndSubmit() {
-        WebElement enterPassword = driver.findElement(enterPasswordValue);
-        enterPassword.sendKeys("automateNow");
+        enterPasswordValue.val("automateNow").pressEnter();
     }
+
 }

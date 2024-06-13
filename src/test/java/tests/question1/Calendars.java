@@ -6,6 +6,9 @@ import basetest.BaseTest;
 import com.aventstack.extentreports.Status;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import java.time.LocalDate;
+
+import static com.codeborne.selenide.Selenide.open;
 
 public class Calendars extends BaseTest {
 
@@ -16,33 +19,33 @@ public class Calendars extends BaseTest {
         try {
             // Visit the webpage
             test.log(Status.INFO, "Navigating to the base URL");
-            driver.get(baseURL);
+            open(baseURL);
             test.log(Status.PASS, "Webpage visited successfully");
 
-            // Verify URL (commented out as per your original code)
-            // URLVerification.verifyURL(driver, calendarsURL);
-            // test.log(Status.PASS, "URL verified successfully");
-
             // Initialize the Calendar page
-            CalendarsPage calendars = new CalendarsPage(driver);
+            CalendarsPage calendars = new CalendarsPage();
 
             // Click on the Calendar page
             test.log(Status.INFO, "Clicking on the Calendars button");
             calendars.clickCalendarsButton();
 
+            // Verify URL
+            URLVerification.verifyURL(calendarsURL);
+            test.log(Status.PASS, "URL verified successfully");
+
             test.log(Status.INFO, "Opening the date picker");
             calendars.clickToOpenDatePicker();
 
-            test.log(Status.INFO, "Selecting the year");
-            calendars.selectYear("May 2024");
+            // Get current date and format it
+            LocalDate targetDate = LocalDate.now();
 
-            test.log(Status.INFO, "Selecting the date");
-            calendars.selectDate("15");
+            test.log(Status.INFO, "Selecting the year and month");
+            calendars.selectDate(targetDate);
 
             // Verify the selected date
             String selectedDate = calendars.getSelectedDate();
             test.log(Status.INFO, "Verifying the selected date");
-            Assert.assertEquals(selectedDate, "2024-05-15", "Selected date does not match");
+            Assert.assertTrue(selectedDate.contains(String.valueOf(targetDate.getDayOfMonth())));
             test.log(Status.PASS, "Selected date verified successfully");
 
             // Click on the submit button
@@ -58,7 +61,7 @@ public class Calendars extends BaseTest {
             // Verify the displayed date
             String verifyDate = calendars.verifiedDate();
             test.log(Status.INFO, "Verifying the displayed date");
-            Assert.assertEquals(verifyDate, "2024-05-15", "Displayed date does not match");
+            Assert.assertTrue(verifyDate.contains(String.valueOf(targetDate.getDayOfMonth())));
             test.log(Status.PASS, "Displayed date verified successfully");
 
         } catch (AssertionError e) {

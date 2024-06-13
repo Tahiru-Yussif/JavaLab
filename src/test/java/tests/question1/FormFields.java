@@ -6,6 +6,8 @@ import basetest.BaseTest;
 import com.aventstack.extentreports.Status;
 import org.testng.annotations.Test;
 
+import static com.codeborne.selenide.Selenide.open;
+
 public class FormFields extends BaseTest {
 
     @Test
@@ -16,11 +18,11 @@ public class FormFields extends BaseTest {
         try {
             // Visit the webpage
             test.log(Status.INFO, "Navigating to base URL");
-            driver.get(baseURL);
+            open(baseURL);
             test.log(Status.PASS, "Webpage visited successfully");
 
             // Instantiate the formField page
-            FormFieldPage formField = new FormFieldPage(driver);
+            FormFieldPage formField = new FormFieldPage();
             test.log(Status.INFO, "FormFieldPage instantiated");
 
             // Navigating to the form field page
@@ -57,7 +59,7 @@ public class FormFields extends BaseTest {
 
             // Verify URL
             test.log(Status.INFO, "Verifying URL");
-            URLVerification.verifyURL(driver, formFieldURL);
+            URLVerification.verifyURL(formFieldURL);
             test.log(Status.PASS, "URL verified successfully");
 
         } catch (AssertionError e) {

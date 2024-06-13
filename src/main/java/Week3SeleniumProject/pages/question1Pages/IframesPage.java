@@ -1,36 +1,25 @@
     package Week3SeleniumProject.pages.question1Pages;
 
+    import com.codeborne.selenide.Condition;
+    import com.codeborne.selenide.SelenideElement;
     import org.openqa.selenium.By;
-    import org.openqa.selenium.JavascriptExecutor;
-    import org.openqa.selenium.WebDriver;
-    import org.openqa.selenium.WebElement;
-    import org.openqa.selenium.support.ui.ExpectedConditions;
-    import org.openqa.selenium.support.ui.WebDriverWait;
-
-    import java.time.Duration;
-
-    import static Week3SeleniumProject.util.AppConfig.clickElement;
+    import static com.codeborne.selenide.Selenide.$;
+    import static com.codeborne.selenide.Selenide.switchTo;
 
     public class IframesPage {
-        private final WebDriver driver;
-        private final By iframesButton = By.linkText("Iframes");
+        private final SelenideElement iframesButton = $(By.linkText("Iframes"));
         private final By firstIframeSubscribeButton = By.xpath("//span[text()='Subscribe']");
         private final By secondIframeDownloadButton = By.xpath("//span[text()='Downloads']");
 
-        public IframesPage(WebDriver driver) {
-            this.driver = driver;
-        }
-
         public void clickIframesButton() {
-            clickElement(driver, iframesButton);
+            iframesButton.click();
         }
 
         private boolean checkIframe(int iframeIndex, By elementLocator) {
-            driver.switchTo().frame(iframeIndex);
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(elementLocator));
-            boolean isDisplayed = element.isDisplayed();
-            driver.switchTo().defaultContent();
+            switchTo().frame(iframeIndex);
+            SelenideElement element = $(elementLocator);
+            boolean isDisplayed = element.shouldBe(Condition.visible).is(Condition.enabled);
+            switchTo().defaultContent();
             return isDisplayed;
         }
 

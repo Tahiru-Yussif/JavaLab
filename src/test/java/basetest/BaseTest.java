@@ -1,22 +1,17 @@
 package basetest;
 
-
 import Week3SeleniumProject.util.AppConfig;
-import Week3SeleniumProject.util.WebdriverSetUp;
-import com.aventstack.extentreports.ExtentReporter;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
+import com.codeborne.selenide.Configuration;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
+
+import static com.codeborne.selenide.Selenide.closeWebDriver;
 
 public class BaseTest {
 
-    public WebDriver driver;
     public String baseURL;
     public String formFieldURL;
     public String popupsURL;
@@ -36,13 +31,16 @@ public class BaseTest {
     ExtentHtmlReporter htmlReporter;
     protected ExtentTest test;
 
-//    @BeforeClass
     @BeforeSuite
     public void setUp() {
-        driver = WebdriverSetUp.setUp();
-        driver.manage().window().maximize();
-//        driver.manage().window().setSize(new Dimension(1024, 768));
-        baseURL = AppConfig.getBaseURL(); // Retrieve base URL from AppConfig
+        // Set Selenide configuration
+        Configuration.browser = "chrome";
+        Configuration.browserSize = "1920x1080";  // Set browser size instead of startMaximized
+        Configuration.timeout = 10000;
+        Configuration.baseUrl = AppConfig.getBaseURL();
+
+        // Load URLs and other configurations from AppConfig
+        baseURL = AppConfig.getBaseURL();
         formFieldURL = AppConfig.getFormFieldURL();
         popupsURL = AppConfig.getPopupsURL();
         modalsURL = AppConfig.getModalsURL();
@@ -57,15 +55,19 @@ public class BaseTest {
         name = AppConfig.getName();
         email = AppConfig.getEmail();
         message = AppConfig.getMessage();
+
+        // Set up ExtentReports
         this.htmlReporter = new ExtentHtmlReporter("ExternalTestReport.html");
         this.extent = new ExtentReports();
-        this.extent.attachReporter(new ExtentReporter[]{this.htmlReporter});
+        this.extent.attachReporter(this.htmlReporter);
     }
 
-//    @AfterClass
     @AfterSuite
     public void tearDown() {
-        WebdriverSetUp.endTest();
+        // Close the browser
+        closeWebDriver();
+
+        // Flush the ExtentReports
         this.extent.flush();
     }
 }
