@@ -3,65 +3,80 @@ package tests.question1;
 import Week3SeleniumProject.pages.question1Pages.TablesPage;
 import Week3SeleniumProject.util.URLVerification;
 import basetest.BaseTest;
+import io.qameta.allure.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.open;
 
-import static com.codeborne.selenide.Selenide.*;
-
+@Epic("Tables Feature")
+@Feature("Tables Interaction Tests")
 public class Tables extends BaseTest {
     private TablesPage tables;
+
     @BeforeMethod
     @Override
     public void setUp() {
         super.setUp();
-        // Visit the webpage
+        Allure.step("Navigating to base URL");
         open(baseURL);
+        Allure.step("Webpage visited successfully");
 
-        // Instantiate the Tables page
         tables = new TablesPage();
-
-        // Click on the tables button
+        Allure.step("Clicking the tables button");
         tables.clickTablesButton();
     }
 
-    @Test(description = "Testing Tables")
+    @Test(priority = 1, description = "Testing Tables")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Verify URL and check if item is displayed in the table")
     public void testTables() {
-        // Verify URL
+        Allure.step("Verifying URL for the tables page");
         URLVerification.verifyURL(tablesURL);
+        Allure.step("URL verified successfully");
 
-        // Check if the item is displayed in the table
+        Allure.step("Checking if the item is displayed in the table");
         boolean itemFound = tables.verifySearchedItem("Laptop", 1);
         Assert.assertTrue(itemFound, "Item should be found in the table.");
+        Allure.step("Item 'Laptop' found in the table");
     }
 
-    @Test(description = "Testing Search Item in Table")
+    @Test(priority = 2, description = "Testing Search Item in Table")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Perform search and verify item in the table")
     public void testSearchItemInTable() {
-        // Perform search
+        Allure.step("Performing search for 'Nigeria' in the table");
         tables.searchItemInTable("Nigeria");
 
-        // Check if the item is displayed in the table
+        Allure.step("Checking if the item 'Nigeria' is displayed in the table");
         boolean itemFound = tables.verifySearchedItem("Nigeria", 2);
         Assert.assertTrue(itemFound, "Item should be found in the table.");
+        Allure.step("Item 'Nigeria' found in the table");
     }
 
-    @Test(description = "Testing Navigation and Search Item in Table")
+    @Test(priority = 3, description = "Testing Navigation and Search Item in Table")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Navigate and perform search to verify item in the table")
     public void testNavigateAndSearchItem() {
-        // Perform navigation
+        Allure.step("Clicking next button to navigate");
         tables.clickNextButton();
 
-        // Perform search
+        Allure.step("Performing search for 'Nigeria' in the table");
         tables.searchItemInTable("Nigeria");
 
-        // Check if the item is displayed in the table
+        Allure.step("Checking if the item 'Nigeria' is displayed in the table");
         boolean itemFound = tables.verifySearchedItem("Nigeria", 2);
         Assert.assertTrue(itemFound, "Item should be found in the table.");
+        Allure.step("Item 'Nigeria' found in the table");
     }
+
     @AfterMethod
     @Override
     public void tearDown() {
         super.tearDown();
         closeWebDriver();
+        Allure.step("Closed the web driver");
     }
 }

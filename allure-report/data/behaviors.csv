@@ -1,0 +1,8 @@
+"Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
+"","","","0","0","5","0","0"
+"Modals Feature","Modal Interaction Tests","Form Modal Button Click","0","0","1","0","0"
+"Modals Feature","Modal Interaction Tests","URL Verification for Modals Page","0","0","1","0","0"
+"Tables Feature","Tables Interaction Tests","Verify URL and check if item is displayed in the table","0","0","1","0","0"
+"Tables Feature","Tables Interaction Tests","Navigate and perform search to verify item in the table","0","0","1","0","0"
+"Tables Feature","Tables Interaction Tests","Perform search and verify item in the table","0","0","1","0","0"
+"Modals Feature","Modal Interaction Tests","Simple Modal Button Click","0","0","1","0","0"
